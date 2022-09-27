@@ -23,7 +23,28 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  
+  if (mailbox === "inbox") {
+    fetch('/emails/inbox')
+    .then(response => response.json())
+    .then(emails => {
+      for (let index = 0; index < emails.length; index++) {
+        const email_view = document.getElementById("emails-view")
+        const card = document.createElement("div")
+        card.classList.add("card")
+        card.classList.add("mt-2")
+        const card_body = document.createElement('div')
+        card_body.classList.add("card-body")
+        const param = document.createElement("p")
+        param.innerHTML += "<b>" + emails[index].sender + "</b>" + "<span class='tab'></span>";
+        param.innerHTML += (emails[index].body.substring(0, 15));
+        param.innerHTML += "<span class='float-right'>" + emails[index].timestamp + "</span>"
+        card_body.appendChild(param)
+        card.appendChild(card_body)
+        email_view.appendChild(card)
+      }
+    });
+  }
+
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
