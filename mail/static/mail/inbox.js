@@ -45,13 +45,51 @@ function fetchEmail(email, color = "white") {
     card.classList.add("read")
   }
 }
-function test() {
-  console.log("clicked");
+
+function backToMain() {
+  document.getElementById("email-detail").innerHTML = ""
+  document.getElementById("emails-view").style.display = "block"
 }
+
+function makeRead(email_id) {
+  const url = `/emails/${email_id}`
+  console.log(url);
+  fetch(url, {
+  method: 'PUT',
+  body: JSON.stringify({
+      "read": true
+  })
+})
+}
+
 function showEmail(email_id) {
   fetch(`/emails/${email_id}`)
     .then(response => response.json())
     .then(email => {
+      makeRead(email.id)
+      document.getElementById("email-detail").style.display = "block"
+      console.log(email);
+      const param = document.createElement("p")
+      const reply_btn = document.createElement("button")
+      const back_btn = document.createElement("button")
+      const hr_elem = document.createElement("hr")
+      const email_body = document.createElement("p")
+      reply_btn.innerText = "Reply"
+      back_btn.innerText = "Back"
+      reply_btn.setAttribute("class", "btn btn-outline-primary")
+      back_btn.setAttribute("class", "btn btn-outline-secondary ml-2")
+      back_btn.setAttribute("onclick", "backToMain()")
+      param.innerHTML += "<b>From: </b>" + email.sender + "<br>";
+      param.innerHTML += "<b>To: </b>" + document.getElementById("email-detail").getAttribute("data-receiver") + "<br>";
+      param.innerHTML += "<b>Subject: </b>" + email.subject + "<br>";
+      param.innerHTML += "<b>Timestamp: </b>" + email.timestamp + "<br>";
+      email_body.innerText = email.body
+      document.getElementById("emails-view").style.display = "none"
+      document.getElementById("email-detail").appendChild(param)
+      document.getElementById("email-detail").appendChild(reply_btn)
+      document.getElementById("email-detail").appendChild(back_btn)
+      document.getElementById("email-detail").appendChild(hr_elem)
+      document.getElementById("email-detail").appendChild(email_body)
       console.log(`email id: ${email.id}`);
     })
 
