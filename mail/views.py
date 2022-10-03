@@ -113,9 +113,7 @@ def email(request, email_id):
     # Update whether email is read or should be archived
     elif request.method == "PUT":
         data = json.loads(request.body)
-        print(data)
         if data.get("read") is not None:
-            print(data["read"])
             email.read = data["read"]
         if data.get("archived") is not None:
             email.archived = data["archived"]
@@ -171,7 +169,6 @@ def register(request):
             user = User.objects.create_user(email, email, password)
             user.save()
         except IntegrityError as e:
-            print(e)
             return render(request, "mail/register.html", {
                 "message": "Email address already taken."
             })

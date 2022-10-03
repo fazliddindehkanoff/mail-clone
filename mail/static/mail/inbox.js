@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function compose_email() {
-
+  document.getElementById("email-detail").innerHTML = ""
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
@@ -46,14 +46,8 @@ function fetchEmail(email, color = "white") {
   }
 }
 
-function backToMain() {
-  document.getElementById("email-detail").innerHTML = ""
-  document.getElementById("emails-view").style.display = "block"
-}
-
 function makeRead(email_id) {
   const url = `/emails/${email_id}`
-  console.log(url);
   fetch(url, {
   method: 'PUT',
   body: JSON.stringify({
@@ -62,13 +56,17 @@ function makeRead(email_id) {
 })
 }
 
+function sendEmail() {
+  const resiever = document.getElementById("compose-recipients")
+
+}
+
 function showEmail(email_id) {
   fetch(`/emails/${email_id}`)
     .then(response => response.json())
     .then(email => {
       makeRead(email.id)
       document.getElementById("email-detail").style.display = "block"
-      console.log(email);
       const param = document.createElement("p")
       const reply_btn = document.createElement("button")
       const back_btn = document.createElement("button")
@@ -78,7 +76,7 @@ function showEmail(email_id) {
       back_btn.innerText = "Back"
       reply_btn.setAttribute("class", "btn btn-outline-primary")
       back_btn.setAttribute("class", "btn btn-outline-secondary ml-2")
-      back_btn.setAttribute("onclick", "backToMain()")
+      back_btn.setAttribute("onclick", "load_mailbox('inbox')")
       param.innerHTML += "<b>From: </b>" + email.sender + "<br>";
       param.innerHTML += "<b>To: </b>" + document.getElementById("email-detail").getAttribute("data-receiver") + "<br>";
       param.innerHTML += "<b>Subject: </b>" + email.subject + "<br>";
@@ -90,12 +88,12 @@ function showEmail(email_id) {
       document.getElementById("email-detail").appendChild(back_btn)
       document.getElementById("email-detail").appendChild(hr_elem)
       document.getElementById("email-detail").appendChild(email_body)
-      console.log(`email id: ${email.id}`);
     })
 
 }
 
 function load_mailbox(mailbox) {
+  document.getElementById("email-detail").innerHTML = ""
   if (mailbox === "inbox") {
     fetch('/emails/inbox')
       .then(response => response.json())
@@ -126,9 +124,6 @@ function load_mailbox(mailbox) {
           fetchEmail(emails[index])
         }
       });
-  }
-  else if (document.getElementById("show-email").clicked == true) {
-    console.log("hello world");
   }
 
   // Show the mailbox and hide other views
