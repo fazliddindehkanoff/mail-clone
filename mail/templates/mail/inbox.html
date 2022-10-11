@@ -11,14 +11,14 @@
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
     <hr>
 
-    <div class="wrapper">
+    <div id="wrapper" class="wrapper" data-user="{{ request.user }}">
         <div id="emails-view"></div>
-        <div id="email-detail" data-receiver='{{ request.user.email }}'></div>
+        <div id="email-detail"></div>
     </div>
 
     <div id="compose-view">
         <h3>New Email</h3>
-        <form id="compose-form">
+        <form id="compose-form" onsubmit="return sendEmail(this)">
             <div class="form-group">
                 From: <input disabled class="form-control" value="{{ request.user.email }}">
             </div>
@@ -29,7 +29,7 @@
                 <input class="form-control" id="compose-subject" placeholder="Subject">
             </div>
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" class="btn btn-primary mt-2" onclick="sendEmail()"/>
+            <input type="submit" class="btn btn-primary mt-2"/>
         </form>
     </div>
 {% endblock %}

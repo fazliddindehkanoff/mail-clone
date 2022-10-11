@@ -56,9 +56,10 @@ function makeRead(email_id) {
 })
 }
 
-function sendEmail() {
-  const resiever = document.getElementById("compose-recipients")
-
+function sendEmail(form) {
+  console.log(form);
+  console.log(form.getElementById(""));
+  return false
 }
 
 function showEmail(email_id) {
@@ -72,13 +73,22 @@ function showEmail(email_id) {
       const back_btn = document.createElement("button")
       const hr_elem = document.createElement("hr")
       const email_body = document.createElement("p")
+      user = document.getElementById("wrapper").getAttribute("data-user")
       reply_btn.innerText = "Reply"
       back_btn.innerText = "Back"
       reply_btn.setAttribute("class", "btn btn-outline-primary")
       back_btn.setAttribute("class", "btn btn-outline-secondary ml-2")
-      back_btn.setAttribute("onclick", "load_mailbox('inbox')")
+      if (email.archived === true) {
+        back_btn.setAttribute("onclick", "load_mailbox('archive')")
+      }
+      else if (email.sender === user) {
+        back_btn.setAttribute("onclick", "load_mailbox('sent')")
+      }
+      else {
+        back_btn.setAttribute("onclick", "load_mailbox('inbox')")
+      }
       param.innerHTML += "<b>From: </b>" + email.sender + "<br>";
-      param.innerHTML += "<b>To: </b>" + document.getElementById("email-detail").getAttribute("data-receiver") + "<br>";
+      param.innerHTML += "<b>To: </b>" + email.recipients + "<br>";
       param.innerHTML += "<b>Subject: </b>" + email.subject + "<br>";
       param.innerHTML += "<b>Timestamp: </b>" + email.timestamp + "<br>";
       email_body.innerText = email.body
